@@ -1,0 +1,186 @@
+.die--theme-1 {
+  --dice-colour: rebeccapurple;
+  --dice-border-colour: pink;
+  --pip-colour: pink;
+  --pip-border-colour: #da8686;
+}
+
+.die--theme-2 {
+  --dice-colour: #233d4d;
+  --dice-border-colour: #93b5c6;
+  --pip-colour: #f06449;
+  --pip-border-colour: #fe7f2d;
+}
+
+.die--theme-3 {
+  --dice-colour: #17bebb;
+  --dice-border-colour: #934683;
+  --pip-colour: #4b1d3f;
+  --pip-border-colour: #0e7c7b;
+}
+
+.die--theme-4 {
+  --dice-colour: #c1f7dc;
+  --dice-border-colour: #c62e65;
+  --pip-colour: #c3d2d5;
+  --pip-border-colour: #e396df;
+}
+
+.die--theme-5 {
+  --dice-colour: #395c6b;
+  --dice-border-colour: #2f1847;
+  --pip-colour: #cba135;
+  --pip-border-colour: #d4cb92;
+}
+
+.die--theme-6 {
+  --dice-colour: #2d080a;
+  --dice-border-colour: #813405;
+  --pip-colour: #f5853f;
+  --pip-border-colour: #f9a03f;
+}
+
+.die {
+  --dice-size: 200px;
+  --pip-size: calc(var(--dice-size) / 5);
+  --pip-location-postive: calc(var(--dice-size) / 4 - 50%);
+  --pip-location-negtive: calc(var(--dice-size) / 4 * -1 - 50%);
+  --pip-middle-middle: translate(-50%, -50%);
+  --pip-right-middle: translate(var(--pip-location-postive), -50%);
+  --pip-left-middle: translate(var(--pip-location-negtive), -50%);
+  --pip-right-top: translate(var(--pip-location-postive),
+      var(--pip-location-negtive));
+  --pip-left-top: translate(var(--pip-location-negtive),
+      var(--pip-location-negtive));
+  --pip-left-bottom: translate(var(--pip-location-negtive),
+      var(--pip-location-postive));
+  --pip-right-bottom: translate(var(--pip-location-postive),
+      var(--pip-location-postive));
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(720deg);
+  }
+}
+
+.die {
+  border-radius: 10px;
+  list-style: none;
+  position: relative;
+  width: var(--dice-size);
+  height: var(--dice-size);
+  margin: 0;
+  padding: 0;
+  background: var(--dice-colour);
+  border: solid var(--dice-border-colour) 2px;
+  transition: background-color 1s ease-in-out, border-color 1s ease-in-out;
+}
+
+.die.spin-dice {
+  animation-duration: 4s;
+  animation-name: spin;
+  animation-iteration-count: 1;
+}
+
+.die .pip {
+  transition: transform 0.5s cubic-bezier(0.86, 0, 0.07, 1),
+    background-color 1s ease-in-out, border-color 1s ease-in-out;
+  border: solid var(--pip-border-colour) 2px;
+  position: absolute;
+  background: var(--pip-colour);
+  border-radius: 50%;
+  height: var(--pip-size);
+  width: var(--pip-size);
+  top: 50%;
+  left: 50%;
+}
+
+.die[data-current-side="1"] .pip {
+  transform: var(--pip-middle-middle);
+
+}
+
+.die[data-current-side="2"] .pip:nth-child(1) {
+  transform: var(--pip-left-top);
+}
+
+.die[data-current-side="2"] .pip {
+  transform: var(--pip-right-bottom);
+}
+
+.die[data-current-side="3"] .pip {
+  transform: var(--pip-middle-middle);
+}
+
+.die[data-current-side="3"] .pip:nth-child(1) {
+  transform: var(--pip-left-top);
+}
+
+.die[data-current-side="3"] .pip:nth-child(2) {
+  transform: var(--pip-right-bottom);
+}
+
+.die[data-current-side="4"] .pip {
+  transform: var(--pip-right-top);
+}
+
+.die[data-current-side="4"] .pip:nth-child(1) {
+  transform: var(--pip-left-top);
+}
+
+.die[data-current-side="4"] .pip:nth-child(2) {
+  transform: var(--pip-right-bottom);
+}
+
+.die[data-current-side="4"] .pip:nth-child(3) {
+  transform: var(--pip-left-bottom);
+}
+
+.die[data-current-side="5"] .pip {
+  transform: var(--pip-right-top);
+}
+
+.die[data-current-side="5"] .pip:nth-child(1) {
+  transform: var(--pip-left-top);
+}
+
+.die[data-current-side="5"] .pip:nth-child(2) {
+  transform: var(--pip-right-bottom);
+}
+
+.die[data-current-side="5"] .pip:nth-child(3) {
+  transform: var(--pip-left-bottom);
+}
+
+.die[data-current-side="5"] .pip:nth-child(4) {
+  transform: var(--pip-middle-middle);
+}
+
+.die[data-current-side="6"] .pip {
+  transform: var(--pip-right-top);
+}
+
+.die[data-current-side="6"] .pip:nth-child(1) {
+  transform: var(--pip-left-top);
+}
+
+.die[data-current-side="6"] .pip:nth-child(2) {
+  transform: var(--pip-right-bottom);
+}
+
+.die[data-current-side="6"] .pip:nth-child(3) {
+  transform: var(--pip-left-bottom);
+}
+
+.die[data-current-side="6"] .pip:nth-child(4) {
+  transform: var(--pip-left-middle);
+}
+
+.die[data-current-side="6"] .pip:nth-child(5) {
+  transform: var(--pip-right-middle);
+}
