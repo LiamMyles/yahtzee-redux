@@ -52,7 +52,7 @@ function App() {
     <>
       <ScoreBoard dice={diceState.map(({ side }) => side)} />
       <div>
-        <section>
+        <section className="dice">
           {diceState.map((dieState, index) => (
             <div key={index}>
               <Die
@@ -113,48 +113,164 @@ function Die({ side = 1, theme = 1, clickFunction, isHeld }) {
   );
 }
 
+function ScoreButtonSelection({ isValidScore, children }) {
+  return <button disabled={!isValidScore}>{children}</button>;
+}
+
 function ScoreBoard({ dice }) {
-  const scores = [
-    { test: dice => dice.includes(1), name: "ones" },
-    { test: dice => dice.includes(2), name: "twos" },
-    { test: dice => dice.includes(3), name: "threes" },
-    { test: dice => dice.includes(4), name: "fours" },
-    { test: dice => dice.includes(5), name: "fives" },
-    { test: dice => dice.includes(6), name: "sixes" },
-    { test: dice => new Set(dice).size === 3, name: "threeKids" },
-    { test: dice => new Set(dice).size === 2, name: "fourKids" },
-    { test: dice => dice.includes(1), name: "smallStraight" },
-    { test: dice => dice.includes(1), name: "longStraight" },
-    { test: () => true, name: "chance" },
-    { test: dice => new Set(dice).size === 1, name: "yahtzee" }
-  ];
+  function getUpperScoreFunction(scoringNumber) {
+    return dice =>
+      dice
+        .filter(die => die === scoringNumber)
+        .reduce((prev, current) => prev + current, 0);
+  }
+
+  const scores = {
+    upper: [
+      {
+        test: dice => dice.includes(1),
+        name: "ones",
+        topScore: 5,
+        getScore: getUpperScoreFunction(1)
+      },
+      {
+        test: dice => dice.includes(2),
+        name: "twos",
+        topScore: 10,
+        getScore: getUpperScoreFunction(2)
+      },
+      {
+        test: dice => dice.includes(3),
+        name: "threes",
+        topScore: 15,
+        getScore: getUpperScoreFunction(3)
+      },
+      {
+        test: dice => dice.includes(4),
+        name: "fours",
+        topScore: 20,
+        getScore: getUpperScoreFunction(4)
+      },
+      {
+        test: dice => dice.includes(5),
+        name: "fives",
+        topScore: 25,
+        getScore: getUpperScoreFunction(5)
+      },
+      {
+        test: dice => dice.includes(6),
+        name: "sixes",
+        topScore: 30,
+        getScore: getUpperScoreFunction(6)
+      }
+    ],
+    lower: [
+      {
+        test: dice => {
+          const newDice = [...dice];
+          newDice.sort();
+
+          const firstHalf = newDice.slice(0, 3);
+          const endHalf = newDice.slice(2);
+
+          return (
+            firstHalf.every(die => die === firstHalf[0]) ||
+            endHalf.every(die => die === endHalf[0])
+          );
+        },
+        name: "threeKinds",
+        topScore: 18,
+        getScore: dice => {
+          const newDice = [...dice];
+          newDice.sort();
+
+          const firstHalf = newDice.slice(0, 3);
+          const endHalf = newDice.slice(2);
+
+          if (firstHalf.every(die => die === firstHalf[0]))
+            return firstHalf[0] * 3;
+          if (endHalf.every(die => die === endHalf[0])) return endHalf[0] * 3;
+        }
+      },
+      {
+        test: dice => {
+          const newDice = [...dice];
+          newDice.sort();
+
+          const firstHalf = newDice.slice(0, 4);
+          const endHalf = newDice.slice(1);
+
+          return (
+            firstHalf.every(die => die === firstHalf[0]) ||
+            endHalf.every(die => die === endHalf[0])
+          );
+        },
+        name: "fourKinds",
+        topScore: 24,
+        getScore: dice => {
+          const newDice = [...dice];
+          newDice.sort();
+
+          const firstHalf = newDice.slice(0, 4);
+          const endHalf = newDice.slice(1);
+
+          if (firstHalf.every(die => die === firstHalf[0]))
+            return firstHalf[0] * 4;
+          if (endHalf.every(die => die === endHalf[0])) return endHalf[0] * 4;
+        }
+      },
+      {
+        test: dice => dice.includes(1),
+        name: "smallStraight",
+        topScore: 0,
+        getScore: dice => 0
+      },
+      {
+        test: dice => dice.includes(1),
+        name: "longStraight",
+        topScore: 0,
+        getScore: dice => 0
+      },
+      {
+        test: () => true,
+        name: "chance",
+        topScore: 30,
+        getScore: dice => dice.reduce((prev, current) => prev + current, 0)
+      },
+      {
+        test: dice => new Set(dice).size === 1,
+        name: "yahtzee",
+        topScore: 0,
+        getScore: dice => 0
+      }
+    ]
+  };
 
   return (
-    <>
-      {scores
-        .map(score => ({ isValid: score.test(dice), name: score.name }))
-        .filter(score => score.isValid)
-        .map(({ name }) => (
-          <p>{name}</p>
-        ))}
-      <ul>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
+    <section className="score-board">
+      <ul className="score-board__scores score-board__scores--upper-section">
+        {scores.upper.map(({ name, test, topScore, getScore }) => {
+          return (
+            <ScoreButtonSelection isValidScore={test(dice)} key={name}>
+              {`${name} ${topScore} ${getScore(dice)}`}
+            </ScoreButtonSelection>
+          );
+        })}
       </ul>
-      <ul>
-        <li>3 of a kind</li>
-        <li>4 of a kind</li>
-        <li>Full House</li>
-        <li>Small Straight</li>
-        <li>Long Straight</li>
-        <li>Chance</li>
-        <li>Yahtzee</li>
+      <ul className="score-board__scores score-board__scores--lower-section">
+        {scores.lower.map(({ name, test, topScore, getScore }) => {
+          if (name === "fourKinds") {
+            console.log(test(dice));
+            console.log(dice);
+          }
+          return (
+            <ScoreButtonSelection isValidScore={test(dice)} key={name}>
+              {`${name} ${topScore} ${getScore(dice)}`}
+            </ScoreButtonSelection>
+          );
+        })}
       </ul>
-    </>
+    </section>
   );
 }
 
