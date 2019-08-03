@@ -313,11 +313,6 @@ function ScoreBoard({ dice }) {
       </ul>
       <ul className="score-board__scores score-board__scores--lower-section">
         {scores.lower.map(({ name, test, topScore, getScore }) => {
-          if (name === "smallStraight") {
-            console.log(name);
-            console.log(test(dice));
-            console.log(dice);
-          }
           return (
             <ScoreButtonSelection isValidScore={test(dice)} key={name}>
               {`${name} ${topScore} ${getScore(dice)}`}
