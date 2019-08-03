@@ -220,16 +220,70 @@ function ScoreBoard({ dice }) {
         }
       },
       {
-        test: dice => dice.includes(1),
+        test: dice => {
+          const newDice = [...dice];
+          newDice.sort();
+
+          const firstHalf = newDice.slice(0, 4);
+          const endHalf = newDice.slice(2);
+          const checkAllAreConsecutive = (die, index, dice) => {
+            if (index === dice.length - 1) return true;
+            return die + 1 === dice[index + 1];
+          };
+          return (
+            firstHalf.every(checkAllAreConsecutive) ||
+            endHalf.every(checkAllAreConsecutive)
+          );
+        },
         name: "smallStraight",
-        topScore: 0,
-        getScore: dice => 0
+        topScore: 30,
+        getScore: dice => {
+          const newDice = [...dice];
+          newDice.sort();
+
+          const firstHalf = newDice.slice(0, 4);
+          const endHalf = newDice.slice(2);
+          const checkAllAreConsecutive = (die, index, dice) => {
+            if (index === dice.length - 1) return true;
+            return die + 1 === dice[index + 1];
+          };
+          if (
+            firstHalf.every(checkAllAreConsecutive) ||
+            endHalf.every(checkAllAreConsecutive)
+          ) {
+            return 30;
+          } else {
+            return 0;
+          }
+        }
       },
       {
-        test: dice => dice.includes(1),
+        test: dice => {
+          const newDice = [...dice];
+          newDice.sort();
+
+          const checkAllAreConsecutive = (die, index, dice) => {
+            if (index === dice.length - 1) return true;
+            return die + 1 === dice[index + 1];
+          };
+          return newDice.every(checkAllAreConsecutive);
+        },
         name: "longStraight",
-        topScore: 0,
-        getScore: dice => 0
+        topScore: 40,
+        getScore: dice => {
+          const newDice = [...dice];
+          newDice.sort();
+
+          const checkAllAreConsecutive = (die, index, dice) => {
+            if (index === dice.length - 1) return true;
+            return die + 1 === dice[index + 1];
+          };
+          if (newDice.every(checkAllAreConsecutive)) {
+            return 40;
+          } else {
+            return 0;
+          }
+        }
       },
       {
         test: () => true,
@@ -240,8 +294,8 @@ function ScoreBoard({ dice }) {
       {
         test: dice => new Set(dice).size === 1,
         name: "yahtzee",
-        topScore: 0,
-        getScore: dice => 0
+        topScore: 50,
+        getScore: dice => 50
       }
     ]
   };
@@ -259,7 +313,8 @@ function ScoreBoard({ dice }) {
       </ul>
       <ul className="score-board__scores score-board__scores--lower-section">
         {scores.lower.map(({ name, test, topScore, getScore }) => {
-          if (name === "fourKinds") {
+          if (name === "smallStraight") {
+            console.log(name);
             console.log(test(dice));
             console.log(dice);
           }
