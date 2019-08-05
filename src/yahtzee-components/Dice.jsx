@@ -17,7 +17,7 @@ const initialDiceState = {
   currentDice: [1, 1, 1, 1, 1]
 };
 
-function diceReducer(state, { type, dieNumber }) {
+function diceReducer(state, { type, dieNumber, isFirstRound }) {
   switch (type) {
     case "rollDie": {
       const newDice = state.dice.map((die, index) => {
@@ -39,10 +39,11 @@ function diceReducer(state, { type, dieNumber }) {
       });
       return { ...state, dice: newDice, currentRoll: state.currentRoll + 1 };
     }
-    case "holdDie": {
+    case "toggleHold": {
+      if (isFirstRound) return state;
       const newDice = state.dice.map((die, index) => {
         if (dieNumber === index) {
-          return { ...die, isHeld: true };
+          return { ...die, isHeld: !die.isHeld };
         } else {
           return die;
         }
@@ -66,9 +67,14 @@ function usePrevious(value) {
   return ref.current;
 }
 
-export default function Dice({ dispatchGameState }) {
+export default function Dice({
+  dispatchGameState,
+  isOutOfRolls,
+  isFirstRound
+}) {
   const [diceState, dispatchDice] = useReducer(diceReducer, initialDiceState);
   const previousRoll = usePrevious(diceState.currentRoll);
+
   useEffect(() => {
     if (diceState.currentRoll === previousRoll + 1) {
       dispatchGameState({
@@ -78,31 +84,32 @@ export default function Dice({ dispatchGameState }) {
     }
   }, [diceState, dispatchGameState, previousRoll]);
 
+  useEffect(() => {
+    dispatchDice({ type: "resetHeld" });
+  }, [isFirstRound]);
+
   return (
     <>
       <section className="dice">
         {diceState.dice.map((dieState, index) => (
           <div key={index}>
             <Die
-              side={dieState.side}
+              side={isFirstRound ? 1 : dieState.side}
               theme={dieState.theme}
               isHeld={dieState.isHeld}
               clickFunction={() => {
-                dispatchDice({ type: "rollDie", dieNumber: index });
+                dispatchDice({
+                  type: "toggleHold",
+                  dieNumber: index,
+                  isFirstRound
+                });
               }}
             />
-
-            <button
-              onClick={() => {
-                dispatchDice({ type: "holdDie", dieNumber: index });
-              }}
-            >
-              Hold Die
-            </button>
           </div>
         ))}
       </section>
       <button
+        disabled={isOutOfRolls}
         onClick={() => {
           dispatchDice({ type: "rollDice" });
         }}

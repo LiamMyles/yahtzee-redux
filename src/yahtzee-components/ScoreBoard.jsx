@@ -74,7 +74,7 @@ function scoreReducer(state, { type, alias, score, section }) {
   }
 }
 
-export default function ScoreBoard({ dice, dispatchGameState }) {
+export default function ScoreBoard({ dice, dispatchGameState, canScore }) {
   const [scoreState, dispatchScores] = useReducer(
     scoreReducer,
     initialScoreState
@@ -85,6 +85,7 @@ export default function ScoreBoard({ dice, dispatchGameState }) {
         {scoreboardBlueprint.upper.map(
           ({ name, test, topScore, getScore, alias }) => (
             <ScoreButtonSelection
+              canScore={canScore}
               section={"upper"}
               currentScore={getScore(dice)}
               isValidScore={test(dice)}
@@ -104,6 +105,7 @@ export default function ScoreBoard({ dice, dispatchGameState }) {
         {scoreboardBlueprint.lower.map(
           ({ name, test, topScore, getScore, alias }) => (
             <ScoreButtonSelection
+              canScore={canScore}
               section={"lower"}
               currentScore={getScore(dice)}
               isValidScore={test(dice)}
@@ -133,7 +135,8 @@ function ScoreButtonSelection({
   alias,
   scoredScore,
   section,
-  dispatchGameState
+  dispatchGameState,
+  canScore
 }) {
   const showCurrentScore =
     !isScored &&
@@ -151,7 +154,7 @@ function ScoreButtonSelection({
         });
         dispatchGameState({ type: "addScore", section, score: currentScore });
       }}
-      disabled={!isValidScore || isScored}
+      disabled={!isValidScore || isScored || !canScore}
       style={isScored ? { background: "red" } : {}}
     >
       {`${name} max: ${topScore} `}

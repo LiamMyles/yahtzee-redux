@@ -69,9 +69,14 @@ function App() {
       <ScoreBoard
         dice={gameState.currentDice}
         dispatchGameState={dispatchGameState}
+        canScore={gameState.currentDiceRoll > 0}
       />
       <div>
-        <Dice dispatchGameState={dispatchGameState} />
+        <Dice
+          dispatchGameState={dispatchGameState}
+          isOutOfRolls={gameState.currentDiceRoll === 3}
+          isFirstRound={gameState.currentDiceRoll === 0}
+        />
         <h2>Current Roll {gameState.currentDiceRoll}/3</h2>
       </div>
     </>
