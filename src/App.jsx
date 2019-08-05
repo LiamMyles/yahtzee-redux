@@ -2,52 +2,9 @@ import React, { useReducer } from "react";
 import "./App.css";
 import "./Die.css";
 
-import Die from "./yahtzee-components/Die";
+import Dice from "./yahtzee-components/Dice";
 import ScoreBoard from "./yahtzee-components/ScoreBoard";
 
-function rollDice() {
-  return Math.floor(Math.random() * 6) + 1;
-}
-
-const initialDiceState = [...Array(5)].map(() => ({
-  theme: 3,
-  side: 1,
-  isRolling: false,
-  isHeld: false
-}));
-
-function diceReducer(state, { type, dieNumber }) {
-  switch (type) {
-    case "rollDie":
-      return state.map((die, index) => {
-        if (dieNumber === index && !die.isHeld) {
-          return { ...die, side: rollDice() };
-        } else {
-          return die;
-        }
-      });
-    case "rollAllDice":
-      return state.map(die => {
-        if (die.isHeld) {
-          return { ...die };
-        } else {
-          return { ...die, side: rollDice() };
-        }
-      });
-    case "holdDie":
-      return state.map((die, index) => {
-        if (dieNumber === index) {
-          return { ...die, isHeld: true };
-        } else {
-          return die;
-        }
-      });
-    case "resetHeld":
-      return state.map(die => ({ ...die, isHeld: false }));
-    default:
-      throw new Error();
-  }
-}
 const initialScoreState = {
   upper: {
     ones: {
@@ -126,9 +83,10 @@ const initialGameState = {
   totalScores: { lower: 0, upper: 0, yahtzees: 0 },
   currentRound: 0,
   currentDiceRoll: 0,
+  currentDice: [1, 1, 1, 1, 1],
   hasYathzeed: false
 };
-function gameStateReducer(state, { type, score, section }) {
+function gameStateReducer(state, { type, score, section, currentDice }) {
   switch (type) {
     case "addScore": {
       return {
@@ -136,14 +94,10 @@ function gameStateReducer(state, { type, score, section }) {
         totalScores: {
           ...state.totalScores,
           [section]: state.totalScores[section] + score
-        }
+        },
+        currentRound: state.currentRound + 1,
+        currentDiceRoll: 0
       };
-    }
-    case "incrementRound": {
-      return { ...state, currentRound: state.currentRound + 1 };
-    }
-    case "incrementDiceRoll": {
-      return { ...state, currentDiceRoll: state.currentDiceRoll + 1 };
     }
     case "updateYahtzees": {
       if (state.hasYathzeed) {
@@ -159,6 +113,13 @@ function gameStateReducer(state, { type, score, section }) {
         };
       }
     }
+    case "updateCurrentRoll": {
+      return {
+        ...state,
+        currentDice,
+        currentDiceRoll: state.currentDiceRoll + 1
+      };
+    }
 
     default:
       throw new Error();
@@ -171,7 +132,7 @@ function App() {
     gameStateReducer,
     initialGameState
   );
-  const [diceState, dispatchDice] = useReducer(diceReducer, initialDiceState);
+
   const [scoreState, dispatchScores] = useReducer(
     scoreReducer,
     initialScoreState
@@ -185,48 +146,14 @@ function App() {
         }`}
       </h1>
       <ScoreBoard
-        dice={diceState.map(({ side }) => side)}
+        dice={gameState.currentDice}
         scoreState={scoreState}
         dispatchScores={dispatchScores}
         dispatchGameState={dispatchGameState}
       />
       <div>
-        <section className="dice">
-          {diceState.map((dieState, index) => (
-            <div key={index}>
-              <Die
-                side={dieState.side}
-                theme={dieState.theme}
-                isHeld={dieState.isHeld}
-                clickFunction={() => {
-                  dispatchDice({ type: "rollDie", dieNumber: index });
-                }}
-              />
-
-              <button
-                onClick={() => {
-                  dispatchDice({ type: "holdDie", dieNumber: index });
-                }}
-              >
-                Hold Die
-              </button>
-            </div>
-          ))}
-        </section>
-        <button
-          onClick={() => {
-            dispatchDice({ type: "rollAllDice" });
-          }}
-        >
-          Roll All
-        </button>
-        <button
-          onClick={() => {
-            dispatchDice({ type: "resetHeld" });
-          }}
-        >
-          Reset Held
-        </button>
+        <Dice dispatchGameState={dispatchGameState} />
+        <h2>Current Roll {gameState.currentDiceRoll}/3</h2>
       </div>
     </>
   );
