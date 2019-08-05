@@ -5,80 +5,6 @@ import "./Die.css";
 import Dice from "./yahtzee-components/Dice";
 import ScoreBoard from "./yahtzee-components/ScoreBoard";
 
-const initialScoreState = {
-  upper: {
-    ones: {
-      score: 0,
-      isScored: false
-    },
-    twos: {
-      score: 0,
-      isScored: false
-    },
-    threes: {
-      score: 0,
-      isScored: false
-    },
-    fours: {
-      score: 0,
-      isScored: false
-    },
-    fives: {
-      score: 0,
-      isScored: false
-    },
-    sixes: {
-      score: 0,
-      isScored: false
-    }
-  },
-  lower: {
-    threeKinds: {
-      score: 0,
-      isScored: false
-    },
-    fourKinds: {
-      score: 0,
-      isScored: false
-    },
-    smallStraight: {
-      score: 0,
-      isScored: false
-    },
-    longStraight: {
-      score: 0,
-      isScored: false
-    },
-    chance: {
-      score: 0,
-      isScored: false
-    },
-    yahtzee: {
-      score: 0,
-      isScored: false
-    }
-  }
-};
-function scoreReducer(state, { type, alias, score, section }) {
-  switch (type) {
-    case "addScore": {
-      return {
-        ...state,
-        [section]: {
-          ...state[section],
-          [alias]: {
-            ...state[section][alias],
-            score,
-            isScored: true
-          }
-        }
-      };
-    }
-    default:
-      throw new Error();
-  }
-}
-
 const initialGameState = {
   totalScores: { lower: 0, upper: 0, yahtzees: 0 },
   currentRound: 0,
@@ -133,11 +59,6 @@ function App() {
     initialGameState
   );
 
-  const [scoreState, dispatchScores] = useReducer(
-    scoreReducer,
-    initialScoreState
-  );
-
   return (
     <>
       <h1>
@@ -147,8 +68,6 @@ function App() {
       </h1>
       <ScoreBoard
         dice={gameState.currentDice}
-        scoreState={scoreState}
-        dispatchScores={dispatchScores}
         dispatchGameState={dispatchGameState}
       />
       <div>

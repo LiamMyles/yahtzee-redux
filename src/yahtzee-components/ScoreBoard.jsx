@@ -1,4 +1,127 @@
-import React from "react";
+import React, { useReducer } from "react";
+
+const initialScoreState = {
+  upper: {
+    ones: {
+      score: 0,
+      isScored: false
+    },
+    twos: {
+      score: 0,
+      isScored: false
+    },
+    threes: {
+      score: 0,
+      isScored: false
+    },
+    fours: {
+      score: 0,
+      isScored: false
+    },
+    fives: {
+      score: 0,
+      isScored: false
+    },
+    sixes: {
+      score: 0,
+      isScored: false
+    }
+  },
+  lower: {
+    threeKinds: {
+      score: 0,
+      isScored: false
+    },
+    fourKinds: {
+      score: 0,
+      isScored: false
+    },
+    smallStraight: {
+      score: 0,
+      isScored: false
+    },
+    longStraight: {
+      score: 0,
+      isScored: false
+    },
+    chance: {
+      score: 0,
+      isScored: false
+    },
+    yahtzee: {
+      score: 0,
+      isScored: false
+    }
+  }
+};
+function scoreReducer(state, { type, alias, score, section }) {
+  switch (type) {
+    case "addScore": {
+      return {
+        ...state,
+        [section]: {
+          ...state[section],
+          [alias]: {
+            ...state[section][alias],
+            score,
+            isScored: true
+          }
+        }
+      };
+    }
+    default:
+      throw new Error();
+  }
+}
+
+export default function ScoreBoard({ dice, dispatchGameState }) {
+  const [scoreState, dispatchScores] = useReducer(
+    scoreReducer,
+    initialScoreState
+  );
+  return (
+    <section className="score-board">
+      <ul className="score-board__scores score-board__scores--upper-section">
+        {scoreboardBlueprint.upper.map(
+          ({ name, test, topScore, getScore, alias }) => (
+            <ScoreButtonSelection
+              section={"upper"}
+              currentScore={getScore(dice)}
+              isValidScore={test(dice)}
+              topScore={topScore}
+              name={name}
+              isScored={scoreState.upper[alias].isScored}
+              scoredScore={scoreState.upper[alias].score}
+              dispatchScores={dispatchScores}
+              dispatchGameState={dispatchGameState}
+              alias={alias}
+              key={alias}
+            />
+          )
+        )}
+      </ul>
+      <ul className="score-board__scores score-board__scores--lower-section">
+        {scoreboardBlueprint.lower.map(
+          ({ name, test, topScore, getScore, alias }) => (
+            <ScoreButtonSelection
+              section={"lower"}
+              currentScore={getScore(dice)}
+              isValidScore={test(dice)}
+              topScore={topScore}
+              key={alias}
+              isScored={scoreState.lower[alias].isScored}
+              scoredScore={scoreState.lower[alias].score}
+              dispatchScores={dispatchScores}
+              dispatchGameState={dispatchGameState}
+              alias={alias}
+              name={name}
+            />
+          )
+        )}
+      </ul>
+    </section>
+  );
+}
 
 function ScoreButtonSelection({
   name,
@@ -229,52 +352,3 @@ const scoreboardBlueprint = {
     }
   ]
 };
-export default function ScoreBoard({
-  dice,
-  scoreState,
-  dispatchScores,
-  dispatchGameState
-}) {
-  return (
-    <section className="score-board">
-      <ul className="score-board__scores score-board__scores--upper-section">
-        {scoreboardBlueprint.upper.map(
-          ({ name, test, topScore, getScore, alias }) => (
-            <ScoreButtonSelection
-              section={"upper"}
-              currentScore={getScore(dice)}
-              isValidScore={test(dice)}
-              topScore={topScore}
-              name={name}
-              isScored={scoreState.upper[alias].isScored}
-              scoredScore={scoreState.upper[alias].score}
-              dispatchScores={dispatchScores}
-              dispatchGameState={dispatchGameState}
-              alias={alias}
-              key={alias}
-            />
-          )
-        )}
-      </ul>
-      <ul className="score-board__scores score-board__scores--lower-section">
-        {scoreboardBlueprint.lower.map(
-          ({ name, test, topScore, getScore, alias }) => (
-            <ScoreButtonSelection
-              section={"lower"}
-              currentScore={getScore(dice)}
-              isValidScore={test(dice)}
-              topScore={topScore}
-              key={alias}
-              isScored={scoreState.lower[alias].isScored}
-              scoredScore={scoreState.lower[alias].score}
-              dispatchScores={dispatchScores}
-              dispatchGameState={dispatchGameState}
-              alias={alias}
-              name={name}
-            />
-          )
-        )}
-      </ul>
-    </section>
-  );
-}
