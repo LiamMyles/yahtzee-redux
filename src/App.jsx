@@ -66,8 +66,10 @@ function App() {
           gameState.totalScores.lower
         }`}
       </h1>
+      <h2>Current Roll {gameState.currentDiceRoll}/3</h2>
       <ScoreBoard
         dice={gameState.currentDice}
+        diceRoll={gameState.currentDiceRoll}
         dispatchGameState={dispatchGameState}
         canScore={gameState.currentDiceRoll > 0}
       />
@@ -77,7 +79,6 @@ function App() {
           isOutOfRolls={gameState.currentDiceRoll === 3}
           isFirstRound={gameState.currentDiceRoll === 0}
         />
-        <h2>Current Roll {gameState.currentDiceRoll}/3</h2>
       </div>
     </>
   );

@@ -90,6 +90,21 @@ export default function Dice({
 
   return (
     <>
+      <button
+        disabled={isOutOfRolls}
+        onClick={() => {
+          dispatchDice({ type: "rollDice" });
+        }}
+      >
+        Roll All
+      </button>
+      <button
+        onClick={() => {
+          dispatchDice({ type: "resetHeld" });
+        }}
+      >
+        Reset Held
+      </button>
       <section className="dice">
         {diceState.dice.map((dieState, index) => (
           <div key={index}>
@@ -108,21 +123,6 @@ export default function Dice({
           </div>
         ))}
       </section>
-      <button
-        disabled={isOutOfRolls}
-        onClick={() => {
-          dispatchDice({ type: "rollDice" });
-        }}
-      >
-        Roll All
-      </button>
-      <button
-        onClick={() => {
-          dispatchDice({ type: "resetHeld" });
-        }}
-      >
-        Reset Held
-      </button>
     </>
   );
 }
