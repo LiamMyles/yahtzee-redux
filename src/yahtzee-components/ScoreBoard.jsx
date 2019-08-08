@@ -121,13 +121,7 @@ function ScoreSelection({
   const upperCantScore = cantScore(scoreboardBlueprint.upper, "upper");
   const lowerCantScore = cantScore(scoreboardBlueprint.lower, "lower");
   const mustScoreZero = diceRoll === 3 && upperCantScore && lowerCantScore;
-  console.log();
-  console.log({
-    diceRoll,
-    upperCantScore,
-    lowerCantScore,
-    mustScoreZero
-  });
+
   return (
     <>
       {canScore && (
@@ -179,7 +173,56 @@ function ScoreSelection({
     </>
   );
 }
-
+function ScoreButtonSelection({
+  name,
+  isValidScore,
+  currentScore,
+  topScore,
+  isScored,
+  dispatchScores,
+  alias,
+  scoredScore,
+  section,
+  dispatchGameState,
+  canScore,
+  mustScoreZero
+}) {
+  if (
+    (mustScoreZero && isScored) ||
+    (!mustScoreZero && !isValidScore) ||
+    (!mustScoreZero && isScored)
+  )
+    return false;
+  const showCurrentScore =
+    !isScored &&
+    canScore &&
+    currentScore !== 0 &&
+    currentScore !== undefined &&
+    isValidScore;
+  const disableButton = !mustScoreZero && !isValidScore;
+  const countToScore = mustScoreZero ? 0 : currentScore;
+  return (
+    <button
+      onClick={() => {
+        dispatchScores({
+          type: "addScore",
+          alias,
+          section,
+          score: countToScore
+        });
+        dispatchGameState({ type: "addScore", section, score: countToScore });
+      }}
+      disabled={disableButton}
+      style={isScored ? { background: "red" } : {}}
+    >
+      {mustScoreZero
+        ? `Score Zero on ${name}`
+        : `${`${name} max: ${topScore} `}
+        ${showCurrentScore && `Current: ${currentScore}`}
+        ${isScored && `Scored: ${scoredScore}`}`}
+    </button>
+  );
+}
 function ScoreBoardCells({ dice, scoreState, canScore }) {
   return (
     <section className="score-board">
@@ -250,49 +293,6 @@ function ScoreCell({
   );
 }
 
-function ScoreButtonSelection({
-  name,
-  isValidScore,
-  currentScore,
-  topScore,
-  isScored,
-  dispatchScores,
-  alias,
-  scoredScore,
-  section,
-  dispatchGameState,
-  canScore,
-  mustScoreZero
-}) {
-  const showCurrentScore =
-    !isScored &&
-    canScore &&
-    currentScore !== 0 &&
-    currentScore !== undefined &&
-    isValidScore;
-
-  return (
-    <button
-      onClick={() => {
-        dispatchScores({
-          type: "addScore",
-          alias,
-          section,
-          score: currentScore
-        });
-        dispatchGameState({ type: "addScore", section, score: currentScore });
-      }}
-      disabled={!isValidScore || isScored || !canScore}
-      style={isScored ? { background: "red" } : {}}
-    >
-      {mustScoreZero
-        ? `Score Zero on ${name}`
-        : `${`${name} max: ${topScore} `}
-        ${showCurrentScore && `Current: ${currentScore}`}
-        ${isScored && `Scored: ${scoredScore}`}`}
-    </button>
-  );
-}
 function getUpperScoreFunction(scoringNumber) {
   return dice =>
     dice
