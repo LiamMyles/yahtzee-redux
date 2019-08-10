@@ -10,8 +10,10 @@ const initialGameState = {
   currentRound: 0,
   currentDiceRoll: 0,
   currentDice: [1, 1, 1, 1, 1],
-  hasYathzeed: false
+  hasYathzeed: false,
+  allScoresScored: false
 };
+
 function gameStateReducer(state, { type, score, section, currentDice }) {
   switch (type) {
     case "addScore": {
