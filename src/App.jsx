@@ -46,6 +46,12 @@ function gameStateReducer(state, { type, score, section, currentDice }) {
         currentDiceRoll: state.currentDiceRoll + 1
       };
     }
+    case "allScoresScored": {
+      return {
+        ...state,
+        allScoresScored: true
+      };
+    }
 
     default:
       throw new Error();
@@ -53,7 +59,6 @@ function gameStateReducer(state, { type, score, section, currentDice }) {
 }
 
 function App() {
-  // useEvent? Thing will take scoreState and DiceState to trigger updates to a GameState reducer
   const [gameState, dispatchGameState] = useReducer(
     gameStateReducer,
     initialGameState
@@ -67,19 +72,25 @@ function App() {
         }`}
       </h1>
       <h2>Current Roll {gameState.currentDiceRoll}/3</h2>
-      <ScoreBoard
-        dice={gameState.currentDice}
-        diceRoll={gameState.currentDiceRoll}
-        dispatchGameState={dispatchGameState}
-        canScore={gameState.currentDiceRoll > 0}
-      />
-      <div>
-        <Dice
-          dispatchGameState={dispatchGameState}
-          isOutOfRolls={gameState.currentDiceRoll === 3}
-          isFirstRound={gameState.currentDiceRoll === 0}
-        />
-      </div>
+      {gameState.allScoresScored ? (
+        <h1>THE GAME IS OVER! </h1>
+      ) : (
+        <>
+          <ScoreBoard
+            dice={gameState.currentDice}
+            diceRoll={gameState.currentDiceRoll}
+            dispatchGameState={dispatchGameState}
+            canScore={gameState.currentDiceRoll > 0}
+          />
+          <div>
+            <Dice
+              dispatchGameState={dispatchGameState}
+              isOutOfRolls={gameState.currentDiceRoll === 3}
+              isFirstRound={gameState.currentDiceRoll === 0}
+            />
+          </div>
+        </>
+      )}
     </>
   );
 }

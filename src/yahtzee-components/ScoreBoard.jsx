@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 
 const initialScoreState = {
   upper: {
@@ -52,12 +52,14 @@ const initialScoreState = {
       score: 0,
       isScored: false
     }
-  }
+  },
+  allScoresScored: false
 };
 function scoreReducer(state, { type, alias, score, section }) {
   switch (type) {
     case "addScore": {
       return {
+      const scoredState = {
         ...state,
         [section]: {
           ...state[section],
@@ -68,6 +70,20 @@ function scoreReducer(state, { type, alias, score, section }) {
           }
         }
       };
+      const allIsScored = [];
+      const addIsScores = (scores, arrayToMutate) => {
+        for (const score in scores) {
+          if (scores.hasOwnProperty(score)) {
+            arrayToMutate.push(scores[score].isScored);
+          }
+        }
+      };
+      addIsScores(scoredState.upper, allIsScored);
+      addIsScores(scoredState.lower, allIsScored);
+
+      const allScoresScored = allIsScored.every(isScored => isScored);
+
+      return { ...scoredState, allScoresScored };
     }
     default:
       throw new Error();
@@ -84,6 +100,12 @@ export default function ScoreBoard({
     scoreReducer,
     initialScoreState
   );
+
+  useEffect(() => {
+    if (scoreState.allScoresScored) {
+      dispatchGameState({ type: "allScoresScored" });
+    }
+  }, [scoreState.allScoresScored, dispatchGameState]);
   return (
     <>
       <ScoreBoardCells
