@@ -27,9 +27,15 @@ function gameStateReducer(state, { type, score, section, currentDice }) {
         currentDiceRoll: 0
       };
     }
-    case "updateYahtzees": {
+    case "scoredYahtzee": {
       if (state.hasYathzeed) {
-        return { ...state };
+        return {
+          ...state,
+          totalScores: {
+            ...state.totalScores,
+            yahtzees: state.totalScores.yahtzees + 1
+          }
+        };
       } else {
         return {
           ...state,
@@ -66,16 +72,24 @@ function App() {
     initialGameState
   );
 
+  const upperScore = gameState.totalScores.upper;
+  const lowerScore = gameState.totalScores.lower;
+  const upperBonusScore = upperScore >= 63 ? 35 : 0;
+  const yathzeeBonusScore =
+    gameState.totalScores.yahtzees > 1
+      ? gameState.totalScores.yahtzees * 100
+      : 0;
+  const finalScore =
+    upperScore + lowerScore + upperBonusScore + yathzeeBonusScore;
   return (
     <>
-      <h1>
-        {`Upper - ${gameState.totalScores.upper} & Lower - ${
-          gameState.totalScores.lower
-        }`}
-      </h1>
+      <h1>{`Upper - ${upperScore} & Lower - ${lowerScore}`}</h1>
       <h2>Current Roll {gameState.currentDiceRoll}/3</h2>
       {gameState.allScoresScored ? (
-        <h1>THE GAME IS OVER! </h1>
+        <>
+          <h1>THE GAME IS OVER! </h1>
+          <h2>Final Score: {finalScore}</h2>
+        </>
       ) : (
         <>
           <ScoreBoard

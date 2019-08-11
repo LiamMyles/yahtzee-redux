@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer, useEffect, useRef } from "react";
 
 const initialScoreState = {
   upper: {
@@ -50,7 +50,8 @@ const initialScoreState = {
     },
     yahtzee: {
       score: 0,
-      isScored: false
+      isScored: false,
+      count: 0
     }
   },
   allScoresScored: false
@@ -58,7 +59,6 @@ const initialScoreState = {
 function scoreReducer(state, { type, alias, score, section }) {
   switch (type) {
     case "addScore": {
-      return {
       const scoredState = {
         ...state,
         [section]: {
@@ -66,7 +66,10 @@ function scoreReducer(state, { type, alias, score, section }) {
           [alias]: {
             ...state[section][alias],
             score,
-            isScored: true
+            isScored: true,
+            ...(alias === "yahtzee" && {
+              count: state[section][alias].count + 1
+            })
           }
         }
       };
@@ -90,6 +93,14 @@ function scoreReducer(state, { type, alias, score, section }) {
   }
 }
 
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 export default function ScoreBoard({
   dice,
   dispatchGameState,
@@ -106,6 +117,13 @@ export default function ScoreBoard({
       dispatchGameState({ type: "allScoresScored" });
     }
   }, [scoreState.allScoresScored, dispatchGameState]);
+
+  const previousYahtzeeCount = usePrevious(scoreState.lower.yahtzee.count);
+  useEffect(() => {
+    if (previousYahtzeeCount < scoreState.lower.yahtzee.count) {
+      dispatchGameState({ type: "scoredYahtzee" });
+    }
+  }, [scoreState.lower.yahtzee.count, dispatchGameState, previousYahtzeeCount]);
   return (
     <>
       <ScoreBoardCells
@@ -212,16 +230,17 @@ function ScoreButtonSelection({
   if (
     (mustScoreZero && isScored) ||
     (!mustScoreZero && !isValidScore) ||
-    (!mustScoreZero && isScored)
-  )
+    (!mustScoreZero && isScored && alias !== "yahtzee")
+  ) {
     return false;
+  }
   const showCurrentScore =
     !isScored &&
     canScore &&
     currentScore !== 0 &&
     currentScore !== undefined &&
     isValidScore;
-  const disableButton = !mustScoreZero && !isValidScore;
+  const disableButton = !mustScoreZero && !isValidScore && alias !== "yahtzee";
   const countToScore = mustScoreZero ? 0 : currentScore;
   return (
     <button
@@ -235,7 +254,6 @@ function ScoreButtonSelection({
         dispatchGameState({ type: "addScore", section, score: countToScore });
       }}
       disabled={disableButton}
-      style={isScored ? { background: "red" } : {}}
     >
       {mustScoreZero
         ? `Score Zero on ${name}`
@@ -277,6 +295,7 @@ function ScoreBoardCells({ dice, scoreState, canScore }) {
               isScored={scoreState.lower[alias].isScored}
               scoredScore={scoreState.lower[alias].score}
               alias={alias}
+              yathzeeCount={scoreState.lower[alias].count}
               name={name}
             />
           )
@@ -293,7 +312,9 @@ function ScoreCell({
   topScore,
   isScored,
   scoredScore,
-  canScore
+  canScore,
+  alias,
+  yathzeeCount
 }) {
   const showCurrentScore =
     !isScored &&
@@ -311,6 +332,10 @@ function ScoreCell({
       <span style={{ background: "red" }}>
         {isScored && `Scored: ${scoredScore}`}
       </span>
+      {true && console.log({ alias, yathzeeCount })}
+      {alias === "yahtzee" &&
+        yathzeeCount > 1 &&
+        [...Array(yathzeeCount)].map((x, index) => <span key={index}>*</span>)}
     </p>
   );
 }
