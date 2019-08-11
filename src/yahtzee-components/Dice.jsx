@@ -90,21 +90,17 @@ export default function Dice({
 
   return (
     <>
-      <button
-        disabled={isOutOfRolls}
-        onClick={() => {
-          dispatchDice({ type: "rollDice" });
-        }}
-      >
-        Roll All
-      </button>
-      <button
-        onClick={() => {
-          dispatchDice({ type: "resetHeld" });
-        }}
-      >
-        Reset Held
-      </button>
+      <div className="round-tracker">
+        <h2>Roll</h2>
+        {Array.from({ length: 3 }, (v, index) => {
+          const classes = `round-tracker__counter${
+            index < diceState.currentRoll
+              ? " round-tracker__counter--counted"
+              : ""
+          }`;
+          return <div className={classes} />;
+        })}
+      </div>
       <section className="dice">
         {diceState.dice.map((dieState, index) => (
           <div key={index}>
@@ -123,6 +119,14 @@ export default function Dice({
           </div>
         ))}
       </section>
+      <button
+        disabled={isOutOfRolls}
+        onClick={() => {
+          dispatchDice({ type: "rollDice" });
+        }}
+      >
+        Roll All
+      </button>
     </>
   );
 }

@@ -1,7 +1,41 @@
 .dice {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, 205px);
   grid-gap: 10px;
+  justify-items: center;
+  justify-content: center;
+}
+
+.round-tracker {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  justify-content: center;
+  align-items: center;
+  grid-gap: 20px;
+}
+
+.round-tracker__counter {
+  width: 35px;
+  height: 35px;
+  border: solid 3px black;
+  border-radius: 100%;
+  position: relative;
+}
+
+.round-tracker__counter::before {
+  content: '';
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  background-color: rebeccapurple;
+  transition: transform 0.2s ease-out;
+  transform: scale(0);
+  z-index: -1;
+}
+
+.round-tracker__counter--counted::before {
+  transform: scale(1)
 }
 
 .score-board {

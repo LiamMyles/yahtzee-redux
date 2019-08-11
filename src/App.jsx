@@ -98,6 +98,15 @@ function App() {
             dispatchGameState={dispatchGameState}
             canScore={gameState.currentDiceRoll > 0}
           />
+          <div className="bonus-scores">
+            <span className="bonus-scores__upper">
+              Upper Bonus:<span>{upperBonusScore}</span>
+            </span>
+            <span className="bonus-scores__yathzee">
+              Yahtzee Bonus:
+              <span className="bonus-scores__score">{yathzeeBonusScore}</span>
+            </span>
+          </div>
           <div>
             <Dice
               dispatchGameState={dispatchGameState}
