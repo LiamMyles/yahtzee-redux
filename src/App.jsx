@@ -107,7 +107,18 @@ function App() {
               <span className="bonus-scores__score">{yathzeeBonusScore}</span>
             </span>
           </div>
-          <div>
+          <div className="dice-wrapper">
+            <div className="round-tracker">
+              <h2>Roll</h2>
+              {Array.from({ length: 3 }, (v, index) => {
+                const classes = `round-tracker__counter${
+                  index < gameState.currentDiceRoll
+                    ? " round-tracker__counter--counted"
+                    : ""
+                }`;
+                return <div className={classes} />;
+              })}
+            </div>
             <Dice
               dispatchGameState={dispatchGameState}
               isOutOfRolls={gameState.currentDiceRoll === 3}
