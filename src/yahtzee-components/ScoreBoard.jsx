@@ -164,52 +164,50 @@ function ScoreSelection({
 
   return (
     <>
-      {canScore && (
-        <section className="score-board">
-          <ul className="score-board__scores score-board__scores--upper-section">
-            {scoreboardBlueprint.upper.map(
-              ({ name, test, topScore, getScore, alias }) => (
-                <ScoreButtonSelection
-                  mustScoreZero={mustScoreZero}
-                  canScore={canScore}
-                  section={"upper"}
-                  currentScore={getScore(dice)}
-                  isValidScore={test(dice)}
-                  topScore={topScore}
-                  name={name}
-                  isScored={scoreState.upper[alias].isScored}
-                  scoredScore={scoreState.upper[alias].score}
-                  dispatchScores={dispatchScores}
-                  dispatchGameState={dispatchGameState}
-                  alias={alias}
-                  key={alias}
-                />
-              )
-            )}
-          </ul>
-          <ul className="score-board__scores score-board__scores--lower-section">
-            {scoreboardBlueprint.lower.map(
-              ({ name, test, topScore, getScore, alias }) => (
-                <ScoreButtonSelection
-                  mustScoreZero={mustScoreZero}
-                  canScore={canScore}
-                  section={"lower"}
-                  currentScore={getScore(dice)}
-                  isValidScore={test(dice)}
-                  topScore={topScore}
-                  key={alias}
-                  isScored={scoreState.lower[alias].isScored}
-                  scoredScore={scoreState.lower[alias].score}
-                  dispatchScores={dispatchScores}
-                  dispatchGameState={dispatchGameState}
-                  alias={alias}
-                  name={name}
-                />
-              )
-            )}
-          </ul>
-        </section>
-      )}
+      <section className="score-selection">
+        <ul className="score-selection__buttons score-selection__buttons--upper">
+          {scoreboardBlueprint.upper.map(
+            ({ name, test, topScore, getScore, alias }) => (
+              <ScoreButtonSelection
+                mustScoreZero={mustScoreZero}
+                canScore={canScore}
+                section={"upper"}
+                currentScore={getScore(dice)}
+                isValidScore={test(dice)}
+                topScore={topScore}
+                name={name}
+                isScored={scoreState.upper[alias].isScored}
+                scoredScore={scoreState.upper[alias].score}
+                dispatchScores={dispatchScores}
+                dispatchGameState={dispatchGameState}
+                alias={alias}
+                key={alias}
+              />
+            )
+          )}
+        </ul>
+        <ul className="score-selection__buttons score-selection__buttons--lower">
+          {scoreboardBlueprint.lower.map(
+            ({ name, test, topScore, getScore, alias }) => (
+              <ScoreButtonSelection
+                mustScoreZero={mustScoreZero}
+                canScore={canScore}
+                section={"lower"}
+                currentScore={getScore(dice)}
+                isValidScore={test(dice)}
+                topScore={topScore}
+                key={alias}
+                isScored={scoreState.lower[alias].isScored}
+                scoredScore={scoreState.lower[alias].score}
+                dispatchScores={dispatchScores}
+                dispatchGameState={dispatchGameState}
+                alias={alias}
+                name={name}
+              />
+            )
+          )}
+        </ul>
+      </section>
     </>
   );
 }
@@ -217,33 +215,27 @@ function ScoreButtonSelection({
   name,
   isValidScore,
   currentScore,
-  topScore,
   isScored,
   dispatchScores,
   alias,
-  scoredScore,
   section,
-  dispatchGameState,
   canScore,
+  dispatchGameState,
   mustScoreZero
 }) {
   if (
+    canScore === false ||
     (mustScoreZero && isScored) ||
     (!mustScoreZero && !isValidScore) ||
     (!mustScoreZero && isScored && alias !== "yahtzee")
   ) {
     return false;
   }
-  const showCurrentScore =
-    !isScored &&
-    canScore &&
-    currentScore !== 0 &&
-    currentScore !== undefined &&
-    isValidScore;
   const disableButton = !mustScoreZero && !isValidScore && alias !== "yahtzee";
   const countToScore = mustScoreZero ? 0 : currentScore;
   return (
     <button
+      className="score-selection-button"
       onClick={() => {
         dispatchScores({
           type: "addScore",
@@ -255,11 +247,14 @@ function ScoreButtonSelection({
       }}
       disabled={disableButton}
     >
-      {mustScoreZero
-        ? `Score Zero on ${name}`
-        : `${`${name} max: ${topScore} `}
-        ${showCurrentScore && `Current: ${currentScore}`}
-        ${isScored && `Scored: ${scoredScore}`}`}
+      {mustScoreZero ? (
+        `Score Zero on ${name}`
+      ) : (
+        <>
+          <span className="score-selection-button__name">{name}</span>
+          <span className="score-selection-button__score">{currentScore}</span>
+        </>
+      )}
     </button>
   );
 }

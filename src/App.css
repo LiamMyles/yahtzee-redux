@@ -113,3 +113,39 @@
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 10px;
 }
+
+
+
+.score-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.score-selection__buttons {
+  background: #e7e7e7;
+  border: solid 2px #d6d6d6;
+  margin: 20px;
+  min-height: 100px;
+}
+
+
+.score-selection-button {
+  border: none;
+  background: linear-gradient(to right, rgb(252, 73, 169) 0%, rgb(9, 240, 198) 100%);
+  font-size: x-large;
+  color: white;
+  border-radius: 2px;
+  margin: 10px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.score-selection-button__score {
+  background: rebeccapurple;
+  padding: 0 10px;
+}
+
+.score-selection-button__name {
+  margin: 10px;
+}
