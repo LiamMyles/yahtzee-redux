@@ -311,12 +311,6 @@ function ScoreCell({
   alias,
   yathzeeCount
 }) {
-  const showCurrentScore =
-    !isScored &&
-    canScore &&
-    currentScore !== 0 &&
-    currentScore !== undefined &&
-    isValidScore;
   return (
     <li className="score-board__score">
       <span className="score-board__score-name">{name} </span>
