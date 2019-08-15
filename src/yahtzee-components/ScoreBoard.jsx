@@ -174,10 +174,8 @@ function ScoreSelection({
                 section={"upper"}
                 currentScore={getScore(dice)}
                 isValidScore={test(dice)}
-                topScore={topScore}
                 name={name}
                 isScored={scoreState.upper[alias].isScored}
-                scoredScore={scoreState.upper[alias].score}
                 dispatchScores={dispatchScores}
                 dispatchGameState={dispatchGameState}
                 alias={alias}
@@ -195,10 +193,8 @@ function ScoreSelection({
                 section={"lower"}
                 currentScore={getScore(dice)}
                 isValidScore={test(dice)}
-                topScore={topScore}
                 key={alias}
                 isScored={scoreState.lower[alias].isScored}
-                scoredScore={scoreState.lower[alias].score}
                 dispatchScores={dispatchScores}
                 dispatchGameState={dispatchGameState}
                 alias={alias}
@@ -262,55 +258,33 @@ function ScoreBoardCells({ dice, scoreState, canScore }) {
   return (
     <section className="score-board">
       <ul className="score-board__scores score-board__scores--upper-section">
-        {scoreboardBlueprint.upper.map(
-          ({ name, test, topScore, getScore, alias }) => (
-            <ScoreCell
-              canScore={canScore}
-              currentScore={getScore(dice)}
-              isValidScore={test(dice)}
-              topScore={topScore}
-              key={alias}
-              isScored={scoreState.upper[alias].isScored}
-              scoredScore={scoreState.upper[alias].score}
-              alias={alias}
-              name={name}
-            />
-          )
-        )}
+        {scoreboardBlueprint.upper.map(({ name, alias }) => (
+          <ScoreCell
+            key={alias}
+            isScored={scoreState.upper[alias].isScored}
+            scoredScore={scoreState.upper[alias].score}
+            alias={alias}
+            name={name}
+          />
+        ))}
       </ul>
       <ul className="score-board__scores score-board__scores--lower-section">
-        {scoreboardBlueprint.lower.map(
-          ({ name, test, topScore, getScore, alias }) => (
-            <ScoreCell
-              canScore={canScore}
-              currentScore={getScore(dice)}
-              isValidScore={test(dice)}
-              topScore={topScore}
-              key={alias}
-              isScored={scoreState.lower[alias].isScored}
-              scoredScore={scoreState.lower[alias].score}
-              alias={alias}
-              yathzeeCount={scoreState.lower[alias].count}
-              name={name}
-            />
-          )
-        )}
+        {scoreboardBlueprint.lower.map(({ name, alias }) => (
+          <ScoreCell
+            key={alias}
+            isScored={scoreState.lower[alias].isScored}
+            scoredScore={scoreState.lower[alias].score}
+            alias={alias}
+            yathzeeCount={scoreState.lower[alias].count}
+            name={name}
+          />
+        ))}
       </ul>
     </section>
   );
 }
 
-function ScoreCell({
-  name,
-  isValidScore,
-  currentScore,
-  topScore,
-  isScored,
-  scoredScore,
-  canScore,
-  alias,
-  yathzeeCount
-}) {
+function ScoreCell({ name, isScored, scoredScore, alias, yathzeeCount }) {
   return (
     <li className="score-board__score">
       <span className="score-board__score-name">{name} </span>
