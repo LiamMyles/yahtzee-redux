@@ -318,20 +318,19 @@ function ScoreCell({
     currentScore !== undefined &&
     isValidScore;
   return (
-    <p>
-      <span>{name} </span>
-      <span style={{ background: "yellow" }}>{`max: ${topScore} `}</span>
-      <span style={{ background: "rebeccapurple", color: "white" }}>
-        {showCurrentScore && `Current: ${currentScore}`}
+    <li className="score-board__score">
+      <span className="score-board__score-name">{name} </span>
+      <span
+        className={`score-board__score-scored ${
+          isScored ? "score-board__score-scored--score-added" : ""
+        }`}
+      >
+        {isScored && scoredScore}
       </span>
-      <span style={{ background: "red" }}>
-        {isScored && `Scored: ${scoredScore}`}
-      </span>
-      {true && console.log({ alias, yathzeeCount })}
       {alias === "yahtzee" &&
         yathzeeCount > 1 &&
         [...Array(yathzeeCount)].map((x, index) => <span key={index}>*</span>)}
-    </p>
+    </li>
   );
 }
 
@@ -345,42 +344,42 @@ const scoreboardBlueprint = {
   upper: [
     {
       test: dice => dice.includes(1),
-      name: "ones",
+      name: "Ones",
       alias: "ones",
       topScore: 5,
       getScore: getUpperScoreFunction(1)
     },
     {
       test: dice => dice.includes(2),
-      name: "twos",
+      name: "Twos",
       alias: "twos",
       topScore: 10,
       getScore: getUpperScoreFunction(2)
     },
     {
       test: dice => dice.includes(3),
-      name: "threes",
+      name: "Threes",
       alias: "threes",
       topScore: 15,
       getScore: getUpperScoreFunction(3)
     },
     {
       test: dice => dice.includes(4),
-      name: "fours",
+      name: "Fours",
       alias: "fours",
       topScore: 20,
       getScore: getUpperScoreFunction(4)
     },
     {
       test: dice => dice.includes(5),
-      name: "fives",
+      name: "Fives",
       alias: "fives",
       topScore: 25,
       getScore: getUpperScoreFunction(5)
     },
     {
       test: dice => dice.includes(6),
-      name: "sixes",
+      name: "Sixes",
       alias: "sixes",
       topScore: 30,
       getScore: getUpperScoreFunction(6)
@@ -400,7 +399,7 @@ const scoreboardBlueprint = {
           endHalf.every(die => die === endHalf[0])
         );
       },
-      name: "threeKinds",
+      name: "Three of a Kind",
       alias: "threeKinds",
       topScore: 18,
       getScore: dice => {
@@ -428,7 +427,7 @@ const scoreboardBlueprint = {
           endHalf.every(die => die === endHalf[0])
         );
       },
-      name: "fourKinds",
+      name: "Four of a Kind",
       alias: "fourKinds",
       topScore: 24,
       getScore: dice => {
@@ -459,7 +458,7 @@ const scoreboardBlueprint = {
           endHalf.every(checkAllAreConsecutive)
         );
       },
-      name: "smallStraight",
+      name: "Small Straight",
       alias: "smallStraight",
       topScore: 30,
       getScore: dice => {
@@ -493,7 +492,7 @@ const scoreboardBlueprint = {
         };
         return newDice.every(checkAllAreConsecutive);
       },
-      name: "longStraight",
+      name: "Long Straight",
       alias: "longStraight",
       topScore: 40,
       getScore: dice => {
@@ -513,14 +512,14 @@ const scoreboardBlueprint = {
     },
     {
       test: () => true,
-      name: "chance",
+      name: "Chance",
       alias: "chance",
       topScore: 30,
       getScore: dice => dice.reduce((prev, current) => prev + current, 0)
     },
     {
       test: dice => new Set(dice).size === 1,
-      name: "yahtzee",
+      name: "Yahtzee",
       alias: "yahtzee",
       topScore: 50,
       getScore: () => 50

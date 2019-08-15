@@ -83,30 +83,37 @@ function App() {
     upperScore + lowerScore + upperBonusScore + yathzeeBonusScore;
   return (
     <>
-      <h1>{`Upper - ${upperScore} & Lower - ${lowerScore}`}</h1>
-      <h2>Current Roll {gameState.currentDiceRoll}/3</h2>
       {gameState.allScoresScored ? (
         <>
           <h1>THE GAME IS OVER! </h1>
           <h2>Final Score: {finalScore}</h2>
+          <div className="bonus-scores">
+            {upperBonusScore !== 0 && (
+              <span className="bonus-scores__upper">
+                Upper Bonus:<span>{upperBonusScore}</span>
+              </span>
+            )}
+            {yathzeeBonusScore !== 0 && (
+              <span className="bonus-scores__yathzee">
+                Yahtzee Bonus:
+                <span className="bonus-scores__score">{yathzeeBonusScore}</span>
+              </span>
+            )}
+          </div>
         </>
       ) : (
         <>
+          <div className="title-card">
+            <h1 className="title-card__main">Yahtzee Redux!</h1>
+            <h2 className="title-card__upper">Upper</h2>
+            <h2 className="title-card__lower">Lower</h2>
+          </div>
           <ScoreBoard
             dice={gameState.currentDice}
             diceRoll={gameState.currentDiceRoll}
             dispatchGameState={dispatchGameState}
             canScore={gameState.currentDiceRoll > 0}
           />
-          <div className="bonus-scores">
-            <span className="bonus-scores__upper">
-              Upper Bonus:<span>{upperBonusScore}</span>
-            </span>
-            <span className="bonus-scores__yathzee">
-              Yahtzee Bonus:
-              <span className="bonus-scores__score">{yathzeeBonusScore}</span>
-            </span>
-          </div>
           <div className="dice-wrapper">
             <div className="round-tracker">
               <h2>Roll</h2>
