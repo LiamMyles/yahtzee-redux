@@ -3,9 +3,8 @@ import React from "react";
 export default function Die({ side = 1, theme = 1, clickFunction, isHeld }) {
   return (
     <>
-      {isHeld && <h1>Holding</h1>}
       <ul
-        className={`die die--theme-${theme}`}
+        className={`die die--theme-${theme + (isHeld ? 1 : 0)}`}
         data-current-side={side}
         onClick={clickFunction}
       >
