@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/yahtzee-redux/static/css/main.9b886751.chunk.css",
-    "main.js": "/yahtzee-redux/static/js/main.c04ba917.chunk.js",
-    "main.js.map": "/yahtzee-redux/static/js/main.c04ba917.chunk.js.map",
+    "main.css": "/yahtzee-redux/static/css/main.750e5483.chunk.css",
+    "main.js": "/yahtzee-redux/static/js/main.4876a4fa.chunk.js",
+    "main.js.map": "/yahtzee-redux/static/js/main.4876a4fa.chunk.js.map",
     "runtime~main.js": "/yahtzee-redux/static/js/runtime~main.458ccfaa.js",
     "runtime~main.js.map": "/yahtzee-redux/static/js/runtime~main.458ccfaa.js.map",
     "static/js/2.7518c56c.chunk.js": "/yahtzee-redux/static/js/2.7518c56c.chunk.js",
     "static/js/2.7518c56c.chunk.js.map": "/yahtzee-redux/static/js/2.7518c56c.chunk.js.map",
     "index.html": "/yahtzee-redux/index.html",
-    "precache-manifest.39b804fe2cbb5fe30603c80a368a47cb.js": "/yahtzee-redux/precache-manifest.39b804fe2cbb5fe30603c80a368a47cb.js",
+    "precache-manifest.fd77db764c2f1f1157aaff00b571db78.js": "/yahtzee-redux/precache-manifest.fd77db764c2f1f1157aaff00b571db78.js",
     "service-worker.js": "/yahtzee-redux/service-worker.js",
-    "static/css/main.9b886751.chunk.css.map": "/yahtzee-redux/static/css/main.9b886751.chunk.css.map"
+    "static/css/main.750e5483.chunk.css.map": "/yahtzee-redux/static/css/main.750e5483.chunk.css.map"
   }
 }
