@@ -5,7 +5,24 @@ import "./Die.css";
 import Dice from "./yahtzee-components/Dice";
 import ScoreBoard from "./yahtzee-components/ScoreBoard";
 
-const initialGameState = {
+interface IInitialGameState{
+  totalScores: { lower: number, upper: number, yahtzees: number },
+  currentRound: number,
+  currentDiceRoll: number,
+  currentDice: number[],
+  hasYathzeed: boolean,
+  allScoresScored: boolean
+}
+
+interface IReducerAction{
+  type: string
+   score: number
+   section: 'lower' | 'upper' | 'yahtzees'
+   currentDice: number[]
+}
+
+
+const initialGameState:IInitialGameState = {
   totalScores: { lower: 0, upper: 0, yahtzees: 0 },
   currentRound: 0,
   currentDiceRoll: 0,
@@ -14,7 +31,8 @@ const initialGameState = {
   allScoresScored: false
 };
 
-function gameStateReducer(state, { type, score, section, currentDice }) {
+
+function gameStateReducer(state: IInitialGameState, { type, score, section, currentDice }: IReducerAction): IInitialGameState {
   switch (type) {
     case "addScore": {
       return {
